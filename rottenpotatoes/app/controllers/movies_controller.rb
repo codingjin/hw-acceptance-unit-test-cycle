@@ -37,11 +37,33 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
+  
+  def similar
+
+    if params[:id].nil?
+      flash[:notice] = "param of movie_id is lost"
+      redirect_to movies_path
+    end
+
+    @movie = Movie.find(params[:id])
+    if @movie.nil?
+      redirect_to movies_path
+    end
+    
+    if @movie.director.blank? or @movie.director.nil?
+      flash[:notice] = "'#{@movie.title}' has no director info"
+      redirect_to movies_path
+    end
+    
+    # retrive all the similar movies with @movie.director from model
+    @movies = Movie.find_similar_by_director(@movie.director)
+    
+  end
 
   private
   # Making "internal" methods private is not required, but is a common practice.
   # This helps make clear which methods respond to requests, and which ones do not.
   def movie_params
-    params.require(:movie).permit(:title, :rating, :description, :release_date)
+    params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
   end
 end

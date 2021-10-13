@@ -15,6 +15,18 @@ module NavigationHelpers
 
     when /^the (RottenPotatoes )?home\s?page$/ then '/movies'
 
+    when /^the edit page for "(.*)"$/
+      movie = Movie.find_by(title: $1)
+      edit_movie_path(movie.id) #use rake routes to see the helper, '/movies/:id/edit'
+      
+    when /^the Similar Movies page for "(.*)"$/
+      movie = Movie.find_by(title: $1)
+      similar_movies_path(movie.id)
+
+    when /^the details page for "(.*)"$/
+      movie = Movie.find_by(title: $1)
+      movie_path(movie.id)
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
