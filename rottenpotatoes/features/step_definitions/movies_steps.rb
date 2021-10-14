@@ -12,9 +12,16 @@ Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
 end
 
 When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
-  rating_list.split(', ').each do |rating|
-    step %{I #{uncheck.nil? ? '' : 'un'}check "ratings_#{rating}"}
+  #rating_list.split(', ').each do |rating|
+  #  step %{I #{uncheck.nil? ? '' : 'un'}check "ratings_#{rating}"}
+  #end
+  
+  if uncheck.nil?
+    rating_list.split(', ').each { |rating| check("ratings[" + rating + "]") }
+  else
+    rating_list.split(', ').each { |rating| uncheck("ratings[" + rating + "]") }
   end
+  
 end
 
 Then /I should see all the movies/ do
@@ -27,4 +34,8 @@ end
 Then /^the director of "([^"]*)" should be "([^"]*)"$/ do |movie_title, movie_director|
   movie = Movie.find_by(title: movie_title)
   expect(movie.director).to eq(movie_director)
+end
+
+Then /(.*) seed movies should exist/ do | n_seeds |
+  Movie.count.should be n_seeds.to_i
 end

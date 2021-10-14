@@ -24,7 +24,7 @@ RSpec.describe MoviesController, type: :controller do
         @movie4 = Movie.create :title=>'NoDirector', :rating=>'PG-13', :release_date=>'5-Feb-2000'
     end
     
-    describe 'Get #similar' do
+    describe 'Put #similar' do
         context 'has a director' do
             it 'destory the specific movie' do
                 put :similar, :id=>@movie2.id
@@ -35,8 +35,8 @@ RSpec.describe MoviesController, type: :controller do
         
         context 'has no director' do
             it 'redirect to homepage' do
-               get :similar, :id=>@movie4.id
-               expect(response).to redirect_to movies_path
+                put :similar, :id=>@movie4.id
+                expect(response).to redirect_to movies_path
             end
         end
     end
@@ -95,7 +95,7 @@ RSpec.describe MoviesController, type: :controller do
     describe 'Get #similar' do
         context 'has a director' do
             it 'destory the specific movie' do
-                put :similar, :id=>@movie2.id
+                get :similar, :id=>@movie2.id
                 expect(assigns[:movies]).to eq [@movie2, @movie3]
                 expect(response).to render_template('similar') 
             end
@@ -106,6 +106,13 @@ RSpec.describe MoviesController, type: :controller do
                get :similar, :id=>@movie4.id
                expect(response).to redirect_to movies_path
             end
+        end
+    end
+    
+    describe 'Put #destory' do
+        it 'redirect to movies page' do 
+            put :destroy, :id=>@movie0.id
+            expect(response).to redirect_to(movies_path)
         end
     end
 
